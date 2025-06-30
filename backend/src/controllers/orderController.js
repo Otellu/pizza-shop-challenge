@@ -1,4 +1,5 @@
 const Order = require('../models/Order.js');
+const { simulateDeliveryUpdate } = require('../services/delivery.service.js');
 
 const getOrders = async (req, res) => {
   const orders = await Order.find().populate('pizzas');
@@ -25,7 +26,7 @@ const getOrderById = async (req, res) => {
     if (String(order.user) !== String(req.user._id)) {
       return res.status(403).json({ message: 'Not authorized to view this order' });
     }
-    res.json(order);
+    res.json(order)
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch order', error: err.message });
   }
@@ -34,6 +35,7 @@ const getOrderById = async (req, res) => {
 const createOrder = async (req, res) => {
   const order = new Order({ ...req.body, user: req.user._id });
   await order.save();
+  simulateDeliveryUpdate(order._id);
   res.status(201).json(order);
 };
 
