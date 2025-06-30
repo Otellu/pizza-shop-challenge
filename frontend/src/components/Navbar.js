@@ -27,16 +27,25 @@ function Navbar() {
           </div>
           <div className="flex items-center gap-4">
             {isLoggedIn && !isAdmin && (
-              <button
-                className="relative flex items-center bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition"
-                onClick={() => navigate('/checkout')}
-              >
-                <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v3m4 0H9"></path></svg>
-                Cart
-                <span className="ml-2 bg-red-600 text-white rounded-full px-2 py-0.5 text-xs">
-                  {cart.length}
-                </span>
-              </button>
+              <>
+                <button
+                  className="relative flex items-center bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition"
+                  onClick={() => navigate('/checkout')}
+                >
+                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v3m4 0H9"></path></svg>
+                  Cart
+                  <span className="ml-2 bg-red-600 text-white rounded-full px-2 py-0.5 text-xs">
+                    {cart.length}
+                  </span>
+                </button>
+                <button
+                  className="relative flex items-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded transition ml-2"
+                  onClick={() => navigate('/orders')}
+                >
+                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 018 0v2m-4-4v4m0 0v4m0-4H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-7z"></path></svg>
+                  History
+                </button>
+              </>
             )}
             {isLoggedIn ? (
               <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-semibold transition">Logout</button>)

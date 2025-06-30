@@ -1,43 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../services/api';
 import { toast } from 'react-hot-toast';
 import Loader from '../components/Loader';
 
 function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
   const handleSubmit = async e => {
+    // TODO: call the login api and store the token and role
+    // TODO: redirect to /admin or /menu based on role
+    // TODO: show success or error message
     e.preventDefault();
-    setError(''); setSuccess(''); setIsLoading(true);
     try {
-      const res = await login(form);
-      if (res.token && res.user) {
-        setSuccess('Login successful!');
-        toast.success('Login successful!');
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('role', res.user.role);
-        setTimeout(() => {
-          if (res.user.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/menu');
-          }
-        }, 1000);
-      } else {
-        setError(res.message || 'Login failed.');
-        toast.error(res.message || 'Login failed.');
-      }
+
     } catch (err) {
-      setError('Network error.');
       toast.error('Network error.');
-    } finally {
-      setIsLoading(false);
     }
   };
 

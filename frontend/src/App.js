@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Checkout from './pages/Checkout';
+import OrderHistory from './pages/OrderHistory';
 
 function Layout({ children }) {
   const location = useLocation();
@@ -20,7 +21,9 @@ function Layout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {showNavFooter && <Navbar />}
-      <div className="flex-grow">{children}</div>
+      <div className="flex-grow flex justify-center py-10">
+        <div className="w-full max-w-4xl">{children}</div>
+      </div>
       {showNavFooter && <Footer />}
     </div>
   );
@@ -47,6 +50,11 @@ function AppContent() {
         <Route path="/checkout" element={
           <RequireAuth>
             <Checkout />
+          </RequireAuth>
+        } />
+        <Route path="/orders" element={
+          <RequireAuth>
+            <OrderHistory />
           </RequireAuth>
         } />
       </Routes>

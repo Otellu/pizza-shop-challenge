@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signup } from '../services/api';
 import { toast } from 'react-hot-toast';
 import Loader from '../components/Loader';
 
@@ -13,24 +12,7 @@ function Signup() {
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
   const handleSubmit = async e => {
-    e.preventDefault();
-    setError(''); setSuccess(''); setIsLoading(true);
-    try {
-      const res = await signup(form);
-      if (res.message === 'Signup successful') {
-        setSuccess('Signup successful! You can now login.');
-        toast.success('Signup successful! You can now login.');
-        setTimeout(() => navigate('/login'), 1200);
-      } else {
-        setError(res.message || 'Signup failed.');
-        toast.error(res.message || 'Signup failed.');
-      }
-    } catch (err) {
-      setError('Network error.');
-      toast.error('Network error.');
-    } finally {
-      setIsLoading(false);
-    }
+    // TODO: handle signup api call and redirect
   };
 
   return (
@@ -54,9 +36,9 @@ function Signup() {
           <input type="password" name="password" required value={form.password} onChange={handleChange} className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
         </div>
         <button type="submit" className="w-full py-2 bg-red-600 text-white rounded font-bold hover:bg-red-700 transition flex items-center justify-center" disabled={isLoading}>
-  {isLoading ? <Loader /> : null}
-  {isLoading ? 'Signing up...' : 'Signup'}
-</button>
+          {isLoading ? <Loader /> : null}
+          {isLoading ? 'Signing up...' : 'Signup'}
+        </button>
         <div className="mt-4 text-center text-gray-600">
           Already have an account? <Link to="/login" className="text-red-600 font-semibold hover:underline">Login</Link>
         </div>

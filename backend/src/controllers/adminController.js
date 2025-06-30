@@ -1,20 +1,8 @@
 const { Order, User } = require('../models');
 
-const getSummary = async (req, res) => {
-  try {
-    const totalOrders = await Order.countDocuments();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const ordersToday = await Order.countDocuments({ createdAt: { $gte: today } });
-    const totalUsers = await User.countDocuments();
-    res.json({ totalOrders, ordersToday, totalUsers });
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch summary', error: err.message });
-  }
-};
-
 const getAllOrders = async (req, res) => {
   try {
+    // TODO: Sort the orders such that "pending" orders are the top 
     const orders = await Order.find()
       .sort({ createdAt: -1 })
       .populate('pizzas')
@@ -50,7 +38,6 @@ const getOrdersForUser = async (req, res) => {
 };
 
 module.exports = {
-  getSummary,
   getAllOrders,
   getAllUsers,
   getOrdersForUser
