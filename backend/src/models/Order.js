@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  pizzas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pizza' }],
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  address: String,
-  status: { type: String, enum: ['pending', 'preparing', 'delivered', 'cancelled'], default: 'pending' },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date }
-}, { timestamps: true });
+  // TODO: implement Order schema to manage customer orders.
+  // order status could be 'pending', 'preparing', 'delivered', or 'cancelled'  
+});
 
 module.exports = mongoose.model('Order', orderSchema);

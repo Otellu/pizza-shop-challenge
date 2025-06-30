@@ -27,39 +27,13 @@ function AdminDashboard() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead>
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Pizzas</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ordered At</th>
+                {/* // TODO add order columns  */}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {orders.map(order => (
-                <tr key={order._id}>
-                  <td className="px-4 py-2 whitespace-nowrap">{order.user ? order.user.name : <span className="text-gray-400 italic">N/A</span>}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{order.user ? order.user.email : <span className="text-gray-400 italic">N/A</span>}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div className="flex flex-wrap gap-1">
-                      {order.pizzas.map(pizza => (
-                        <span key={pizza._id} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-full text-sm">
-                          {pizza.veg ? (
-                            <span title="Veg" className="inline-block w-3 h-3 bg-green-600 rounded-full border border-green-800" />
-                          ) : (
-                            <span title="Non-Veg" className="inline-block w-3 h-3 bg-red-600 rounded-full border border-red-800" />
-                          )}
-                          {pizza.name}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : order.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.status}</span>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">{order.address}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">{new Date(order.createdAt).toLocaleString()}</td>
-                </tr>
+                // TODO implement Order UI
+                <p>TODO: implement order ui</p>
               ))}
             </tbody>
           </table>
