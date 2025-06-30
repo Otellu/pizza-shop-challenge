@@ -14,18 +14,42 @@ const pizzaImages = ['pizza1.jpeg', 'pizza2.jpeg', 'pizza3.jpeg', 'pizza4.jpeg']
 
 async function migrate() {
   await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-  for (let i = 0; i < 20; i++) {
-    const name = pizzaNames[i % pizzaNames.length] + ' ' + Math.floor(Math.random() * 1000);
+  const vegIngredients = [
+    ['Cheese', 'Tomato', 'Capsicum'],
+    ['Paneer', 'Onion', 'Peppers'],
+    ['Mushroom', 'Corn', 'Olives'],
+    ['Spinach', 'Tomato', 'Cheese'],
+    ['Jalapeno', 'Cheese', 'Onion']
+  ];
+  const nonVegIngredients = [
+    ['Chicken', 'Cheese', 'Onion'],
+    ['Pepperoni', 'Cheese', 'Tomato'],
+    ['Ham', 'Pineapple', 'Cheese'],
+    ['Chicken Sausage', 'Peppers', 'Cheese'],
+    ['BBQ Chicken', 'Onion', 'Cheese']
+  ];
+  let pizzas = [];
+  // Helper function to determine if pizza is veg based on its name
+  function isVegPizza(name) {
+    const nonVegKeywords = ['chicken', 'pepperoni'];
+    const lowerName = name.toLowerCase();
+    return !nonVegKeywords.some(keyword => lowerName.includes(keyword));
+  }
+
+  for (let i = 0; i < 40; i++) {
+    const baseName = pizzaNames[i % pizzaNames.length];
+    const name = baseName + ' ' + Math.floor(Math.random() * 1000);
+    const isVeg = isVegPizza(baseName);
     const image = pizzaImages[Math.floor(Math.random() * pizzaImages.length)];
+    const ingredients = isVeg
+      ? vegIngredients[Math.floor(Math.random() * vegIngredients.length)]
+      : nonVegIngredients[Math.floor(Math.random() * nonVegIngredients.length)];
+    pizzas.push({ name, image, ingredients, veg: isVeg, price: Math.floor(Math.random() * 400) + 100, available: true });
+  }
+  for (const pizza of pizzas) {
     await Pizza.findOneAndUpdate(
-      { name },
-      {
-        name,
-        ingredients: ['Cheese', 'Tomato', 'Crust'],
-        price: Math.floor(Math.random() * 400) + 100,
-        available: true,
-        image
-      },
+      { name: pizza.name },
+      pizza,
       { upsert: true, new: true }
     );
   }

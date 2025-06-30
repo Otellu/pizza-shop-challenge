@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
   pizzas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pizza' }],
-  customer: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   address: String,
   status: { type: String, enum: ['pending', 'preparing', 'delivered', 'cancelled'], default: 'pending' },
   createdAt: { type: Date, default: Date.now },

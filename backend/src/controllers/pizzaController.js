@@ -1,8 +1,12 @@
 const { Pizza } = require('../models');
 
 const getPizzas = async (req, res) => {
-  // TODO: Add multi-filtering logic
-  const pizzas = await Pizza.find();
+  let filter = {};
+  if (typeof req.query.veg !== 'undefined') {
+    if (req.query.veg === 'true') filter.veg = true;
+    else if (req.query.veg === 'false') filter.veg = false;
+  }
+  const pizzas = await Pizza.find(filter);
   res.json(pizzas);
 };
 

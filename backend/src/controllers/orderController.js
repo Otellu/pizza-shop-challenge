@@ -6,7 +6,7 @@ const getOrders = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  const order = new Order(req.body);
+  const order = new Order({ ...req.body, user: req.user._id });
   await order.save();
   res.status(201).json(order);
 };
