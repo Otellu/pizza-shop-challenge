@@ -12,31 +12,10 @@ function Checkout() {
   const [placing, setPlacing] = React.useState(false);
 
   const handlePlaceOrder = async () => {
-    setPlacing(true);
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          pizzas: cart,
-          name,
-          address,
-          payment: 'COD',
-        }),
-      });
-      if (!res.ok) throw new Error('Order failed');
-      toast.success('Order placed successfully!');
-      clearCart();
-      navigate('/menu');
-    } catch (e) {
-      toast.error('Failed to place order.');
-    } finally {
-      setPlacing(false);
-    }
+    // TODO: implement the place order logic
+    // TODO: show loading state
+    // TODO: call the place order api
+    // TODO: handle success and error cases
   };
 
   return (

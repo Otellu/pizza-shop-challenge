@@ -1,12 +1,9 @@
 const { Pizza } = require('../models');
 
 const getPizzas = async (req, res) => {
-  let filter = {};
-  if (typeof req.query.veg !== 'undefined') {
-    if (req.query.veg === 'true') filter.veg = true;
-    else if (req.query.veg === 'false') filter.veg = false;
-  }
-  const pizzas = await Pizza.find(filter);
+
+  // TODO: Implement filter to pizza by veg
+  const pizzas = await Pizza.find();
   res.json(pizzas);
 };
 

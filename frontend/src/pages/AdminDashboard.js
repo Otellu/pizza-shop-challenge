@@ -8,19 +8,7 @@ function AdminDashboard() {
 
   useEffect(() => {
     async function fetchOrders() {
-      setLoadingOrders(true);
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/orders`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setOrders(data.orders || []);
-      } catch (err) {
-        toast.error('Failed to fetch orders');
-        setOrders([]);
-      }
-      setLoadingOrders(false);
+      // TODO: Implement the fetch orders logic for admin
     }
     fetchOrders();
   }, []);
