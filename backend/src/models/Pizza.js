@@ -1,0 +1,11 @@
+const mongoose = require('mongoose');
+
+const pizzaSchema = new mongoose.Schema({
+  name: String,
+  ingredients: [String],
+  price: Number,
+  available: Boolean,
+  image: String
+});
+
+module.exports = mongoose.model('Pizza', pizzaSchema);

@@ -1,0 +1,68 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { signup } from '../services/api';
+import { toast } from 'react-hot-toast';
+import Loader from '../components/Loader';
+
+function Signup() {
+  const [form, setForm] = useState({ name: '', email: '', address: '', password: '' });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setError(''); setSuccess(''); setIsLoading(true);
+    try {
+      const res = await signup(form);
+      if (res.message === 'Signup successful') {
+        setSuccess('Signup successful! You can now login.');
+        toast.success('Signup successful! You can now login.');
+        setTimeout(() => navigate('/login'), 1200);
+      } else {
+        setError(res.message || 'Signup failed.');
+        toast.error(res.message || 'Signup failed.');
+      }
+    } catch (err) {
+      setError('Network error.');
+      toast.error('Network error.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-red-600">Signup for PizzaShop</h2>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Name</label>
+          <input type="text" name="name" required value={form.name} onChange={handleChange} className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Email</label>
+          <input type="email" name="email" required value={form.email} onChange={handleChange} className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Address</label>
+          <textarea name="address" required rows={3} value={form.address} onChange={handleChange} className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-400 resize-none" />
+        </div>
+        <div className="mb-6">
+          <label className="block mb-1 font-medium">Password</label>
+          <input type="password" name="password" required value={form.password} onChange={handleChange} className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
+        </div>
+        <button type="submit" className="w-full py-2 bg-red-600 text-white rounded font-bold hover:bg-red-700 transition flex items-center justify-center" disabled={isLoading}>
+  {isLoading ? <Loader /> : null}
+  {isLoading ? 'Signing up...' : 'Signup'}
+</button>
+        <div className="mt-4 text-center text-gray-600">
+          Already have an account? <Link to="/login" className="text-red-600 font-semibold hover:underline">Login</Link>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default Signup;
