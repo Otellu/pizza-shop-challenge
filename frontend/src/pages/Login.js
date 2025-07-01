@@ -13,7 +13,6 @@ function Login() {
     // TODO: call the login api and store the token and role
     // TODO: redirect to /admin or /menu based on role
     // TODO: show success or error message
-    e.preventDefault();
     try {
 
     } catch (err) {
@@ -23,7 +22,12 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e)
+      }}
+        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
+      >
         <h2 className="text-2xl font-bold mb-6 text-center text-red-600">Login to PizzaShop</h2>
         <div className="mb-4">
           <label className="block mb-1 font-medium">Email</label>

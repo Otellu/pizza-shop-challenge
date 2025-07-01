@@ -11,8 +11,6 @@ function Signup() {
     password: "",
     role: "user",
   });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -24,8 +22,10 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e)
+      }}
         className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-red-600">
