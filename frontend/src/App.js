@@ -43,9 +43,9 @@ function AppContent() {
         <Route
           path="/menu"
           element={
-            // <RequireAuth>
-            <UserLanding />
-            // </RequireAuth>
+            <RequireAuth>
+              <UserLanding />
+            </RequireAuth>
           }
         />
         <Route
