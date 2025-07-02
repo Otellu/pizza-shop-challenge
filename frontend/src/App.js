@@ -40,6 +40,7 @@ function AppContent() {
     <Layout>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        {/* TODO: Check if user has role user otherwise render <NotAuthorized /> */}
         <Route
           path="/menu"
           element={
@@ -48,15 +49,12 @@ function AppContent() {
             </RequireAuth>
           }
         />
+        {/* TODO: Check if user has role admin otherwise render <NotAuthorized /> */}
         <Route
           path="/admin"
           element={
             <RequireAuth>
-              {localStorage.getItem("role") === "admin" ? (
-                <AdminDashboard />
-              ) : (
-                <NotAuthorized />
-              )}
+              <AdminDashboard />
             </RequireAuth>
           }
         />

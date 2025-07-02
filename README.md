@@ -4,11 +4,11 @@ Welcome to the Pizza Shop Challenge! This is a full-stack application where you'
 
 ## Feature 1: User Authentication System
 
-### User Experience Requirements
+### Requirements
 
-- Users should be able to create both regular user and admin accounts (signup/register as either role).
-- Users should be able to log in with their credentials and be redirected based on their role.
-- Only admin users should be able to access admin-routed pages (e.g., /admin dashboard); non-admins should be blocked and shown a "Not Authorized" page.
+- [ ] You should be able to create both regular user and admin accounts (signup/register as either role).
+- [ ] Users should be able to log in with their credentials and be redirected based on their role. Admins should be redirected to `/admin`, while users should be redirected to `/menu`.
+- [ ] Only admin users should be able to access admin-routed pages (e.g., `/admin`); non-admins should be blocked and shown a "Not Authorized" page.
 
 **Involved files:**
 
@@ -25,26 +25,26 @@ Welcome to the Pizza Shop Challenge! This is a full-stack application where you'
 
 The user should be able to filter and sort the pizzas, scroll until no new pizzas are visible, and receive feedback once they click on a pizza to order.
 
-- **Filtering**: Users should be able to filter pizzas by:
+- [ ] **Filtering**: Users should be able to filter pizzas by:
 
   - All pizzas (no filter)
   - Vegetarian only
   - Non-vegetarian only
 
-- **Sorting**: Users should be able to sort pizzas by:
+- [ ] **Sorting**: Users should be able to sort pizzas by:
 
   - Price: Low to High
   - Price: High to Low
   - Default order (as stored in database)
 
-- **Infinite Loading**:
+- [ ] **Infinite Loading**:
 
   - Load pizzas in batches (e.g., 10-15 pizzas per page)
   - Automatically load more pizzas when user scrolls near the bottom
   - Show loading indicator while fetching more pizzas
   - Handle end of list gracefully
 
-- **Pizza Selection**:
+- [ ] **Pizza Selection**:
   - Users can add multiple pizzas to their cart
   - Show visual feedback when pizza is added to cart
   - Prevent duplicate additions to cart
@@ -59,9 +59,9 @@ The user should be able to filter and sort the pizzas, scroll until no new pizza
 
 ### User Experience Requirements
 
-- **Order Creation**: Users should be able to create an order containing multiple pizzas from their cart.
-- **Order History**: Users should be able to view their past orders.
-- **Admin Order Table**:
+- [ ] **Order Creation**: Users should be able to create an order containing multiple pizzas from their cart.
+- [ ] **Order History**: Users should be able to view their past orders.
+- [ ] **Admin Order Table**:
   - Admins should see the newest orders at the top of the table (sorted by creation date, newest first).
   - Admins should be able to filter orders by multiple statuses (e.g., pending, preparing, delivered, cancelled).
 
@@ -69,9 +69,9 @@ The user should be able to filter and sort the pizzas, scroll until no new pizza
 
 ### User Experience Requirements
 
-- The order system should automatically update the status of an order when a webhook is received (e.g., from a delivery service or payment provider).
-- The update should be safe and reliable, ensuring only valid status changes are applied.
-- Users and admins should see the updated status reflected in their order views.
+- [ ] The order system should automatically update the status of an order when a webhook is received (e.g., from a delivery service or payment provider).
+- [ ] The update should be safe and reliable, ensuring only valid status changes are applied.
+- [ ] Users and admins should see the updated status reflected in their order views.
 
 ### Backend Components
 
@@ -96,7 +96,7 @@ The user should be able to filter and sort the pizzas, scroll until no new pizza
    npm install
    ```
 
-2. Create a `.env` file in the backend directory with the required environment variables
+2. Create a `.env` file in the both backend and frontend directory with the required environment variables
 
 3. Start the development servers:
 
