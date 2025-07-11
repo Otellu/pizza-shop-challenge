@@ -1,5 +1,6 @@
 import React from "react";
 import { CartProvider } from "./components/CartContext";
+import { AuthProvider } from "./components/AuthContext";
 import {
   BrowserRouter as Router,
   Routes,
@@ -40,7 +41,6 @@ function AppContent() {
     <Layout>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* TODO: Check if user has role user otherwise render <NotAuthorized /> */}
         <Route
           path="/menu"
           element={
@@ -49,17 +49,17 @@ function AppContent() {
             </RequireAuth>
           }
         />
-        {/* TODO: Check if user has role admin otherwise render <NotAuthorized /> */}
         <Route
           path="/admin"
           element={
-            <RequireAuth>
+            <RequireAuth adminOnly={true}>
               <AdminDashboard />
             </RequireAuth>
           }
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/not-authorized" element={<NotAuthorized />} />
         <Route
           path="/checkout"
           element={
@@ -84,12 +84,14 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <CartProvider>
-        <Router>
-          <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
-          <AppContent />
-        </Router>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+            <AppContent />
+          </Router>
+        </CartProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

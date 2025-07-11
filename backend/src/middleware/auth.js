@@ -13,8 +13,31 @@ const User = require('../models/User');
  *   - User not found
  */
 const validateToken = async (req, res, next) => {
-  // TODO: Implement JWT validation with error handling
-  next();
+  try {
+    const token = req.header('Authorization');
+    
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    if (!token.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Invalid token format' });
+    }
+
+    const tokenValue = token.replace('Bearer ', '');
+    
+    const decoded = jwt.verify(tokenValue, process.env.JWT_SECRET);
+    
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Token verification failed' });
+  }
 };
 
 module.exports = validateToken;

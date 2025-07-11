@@ -1,18 +1,17 @@
 import React from "react";
 import { useCart } from "./CartContext";
+import { useAuth } from "./AuthContext";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isLoggedIn = Boolean(localStorage.getItem("token"));
-  const isAdmin = localStorage.getItem("role") == "admin";
+  const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const { cart } = useCart();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    navigate("/login");
+    logout();
+    navigate("/");
   };
 
   const activeClass =
@@ -33,7 +32,7 @@ function Navbar() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            {isLoggedIn && !isAdmin && (
+            {isAuthenticated() && !isAdmin() && (
               <>
                 <button
                   className="relative flex items-center bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition"
@@ -80,14 +79,11 @@ function Navbar() {
                 </button>
               </>
             )}
-            {isLoggedIn ? (
+            {isAuthenticated() ? (
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => navigate("/checkout")}
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 font-semibold transition"
-                >
-                  Checkout
-                </button>
+                <span className="text-gray-700 font-medium">
+                  Welcome, {user?.name}
+                </span>
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-semibold transition"

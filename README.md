@@ -1,118 +1,316 @@
 # Pizza Shop Challenge
 
-Welcome to the Pizza Shop Challenge! This is a full-stack application where you'll be implementing various features to complete the pizza ordering system. Below are the tasks organized by features.
+Welcome to the Pizza Shop Challenge! This is a full-stack application where you'll be implementing key features to complete the pizza ordering system.
 
-## Feature 1: User Authentication System
+## 🎯 **YOUR TASKS** (What you need to implement)
 
-### Requirements
+### **Feature 1: Filter, Sort & Pagination System**
 
-- [ ] You should be able to create both regular user and admin accounts (signup/register as either role).
-- [ ] Users should be able to log in with their credentials and be redirected based on their role. Admins should be redirected to `/admin`, while users should be redirected to `/menu`.
-- [ ] Only admin users should be able to access admin-routed pages (e.g., `/admin`); non-admins should be blocked and shown a "Not Authorized" page.
+### **Feature 2: Order Model Design**
 
-**Involved files:**
+### **Feature 3: Webhook Implementation**
 
-- `frontend/src/pages/Login.js`
-- `frontend/src/pages/Signup.js`
-- `backend/src/controllers/authController.js`
-- `backend/src/middleware/auth.js`
-- `backend/src/middleware/admin.js`
-- `frontend/src/App.js`
+---
 
-## Feature 2: Find the perfect pizza
+## 🎯 **TASK 1: Filter, Sort & Pagination System**
 
-### User Experience Requirements
+### 📋 Requirements
 
-The user should be able to filter and sort the pizzas, scroll until no new pizzas are visible, and receive feedback once they click on a pizza to order.
+Implement a complete filtering, sorting, and infinite scroll pagination system for pizzas.
 
-- [ ] **Filtering**: Users should be able to filter pizzas by:
+### Backend Implementation (`backend/src/controllers/pizzaController.js`)
 
-  - All pizzas (no filter)
-  - Vegetarian only
-  - Non-vegetarian only
+- [ ] **Query Parameter Handling**:
 
-- [ ] **Sorting**: Users should be able to sort pizzas by:
+  - `filter`: 'all', 'veg', 'non-veg'
+  - `search`: string (search in name and ingredients)
+  - `sortBy`: 'name', 'price', 'popularity'
+  - `sortOrder`: 'asc', 'desc'
+  - `page`: number (default: 1)
+  - `limit`: number (default: 10)
 
-  - Price: Low to High
-  - Price: High to Low
-  - Default order (as stored in database)
+- [ ] **Response Format**:
+  ```json
+  {
+    "pizzas": [...],
+    "totalCount": 45,
+    "currentPage": 1,
+    "totalPages": 5,
+    "hasNextPage": true,
+    "hasPreviousPage": false
+  }
+  ```
 
-- [ ] **Infinite Loading**:
+### Frontend Implementation (`frontend/src/components/PizzaList.js`)
 
-  - Load pizzas in batches (e.g., 10-15 pizzas per page)
-  - Automatically load more pizzas when user scrolls near the bottom
-  - Show loading indicator while fetching more pizzas
-  - Handle end of list gracefully
+- [ ] **Filter Controls**:
 
-- [ ] **Pizza Selection**:
-  - Users can add multiple pizzas to their cart
-  - Show visual feedback when pizza is added to cart
-  - Prevent duplicate additions to cart
-  - Display cart count/badge in navigation
+  - All, Veg, Non-Veg filter buttons
+  - Search input field
+  - Sort dropdown (Price, Name, etc.)
 
-**Involved files:**
+- [ ] **Infinite Scroll**:
 
-- `frontend/src/components/PizzaList.js`
-- `backend/src/controllers/pizzaController.js`
+  - Intersection Observer API implementation
+  - Loading states and error handling
+  - End-of-list detection
 
-## Feature 3: Handle the orders
+- [ ] **State Management**:
+  - Filter/sort state management
+  - Debounced search input
+  - Optimized API calls
 
-### User Experience Requirements
+**Expected API Examples:**
 
-- [ ] **Order Creation**: Users should be able to create an order containing multiple pizzas from their cart.
-- [ ] **Order History**: Users should be able to view their past orders.
-- [ ] **Admin Order Table**:
-  - Admins should see the newest orders at the top of the table (sorted by creation date, newest first).
-  - Admins should be able to filter orders by multiple statuses (e.g., pending, preparing, delivered, cancelled).
+- `GET /api/pizzas?filter=veg&sortBy=price&sortOrder=asc&page=1&limit=10`
+- `GET /api/pizzas?search=margherita&sortBy=name&sortOrder=desc`
 
-## Feature 4: Order Status Updates
+---
 
-### User Experience Requirements
+## 🎯 **TASK 2: Order Model Design**
 
-- [ ] The order system should automatically update the status of an order when a webhook is received (e.g., from a delivery service or payment provider).
-- [ ] The update should be safe and reliable, ensuring only valid status changes are applied.
-- [ ] Users and admins should see the updated status reflected in their order views.
+### 📋 Requirements
 
-### Backend Components
+Design a comprehensive Order schema that demonstrates your database design skills.
 
-- [ ] **Webhook Handler** (`/backend/src/controllers/webhookController.js`)
-  - Expose a route that receives webhook events containing an `orderId` and a new `status`.
-  - Validate the incoming data (ensure the order exists, status is valid, etc.).
-  - Safely update the order's status in the database.
-  - Handle errors gracefully (e.g., invalid orderId, invalid status, etc.).
-  - Optionally, log webhook events for auditing/debugging purposes.
+### Database Schema Design (`backend/src/models/Order.js`)
 
-## Getting Started
+This is a **critical design task** that tests your understanding of:
 
-1. Install dependencies for both frontend and backend:
+- Database relationships and normalization
+- Data integrity and validation
+- Business logic modeling
+- Performance considerations
 
-   ```bash
-   # Frontend
-   cd frontend
-   npm install
+### 🏗️ Schema Design Challenge
 
-   # Backend
-   cd ../backend
-   npm install
-   ```
+You need to replace the placeholder schema with a complete Order model that handles:
 
-2. Create a `.env` file in the both backend and frontend directory with the required environment variables
+#### **1. Customer Information**
 
-3. Start the development servers:
+- User reference (who placed the order)
+- Customer contact details
+- Delivery address (may differ from user address)
 
-   ```bash
-   # Frontend (from frontend directory)
-   npm start
+#### **2. Order Items**
 
-   # Backend (from backend directory)
-   npm run dev
-   ```
+- Pizza references with quantities
+- Price snapshot (pizzas might change price)
+- Individual item calculations
 
-## Submission
+#### **3. Order Status & Tracking**
 
-- Complete all the TODO items in the codebase
-- Ensure all features work as expected
-- Follow best practices for code organization and error handling
-- Document any additional setup steps if needed
+- Status progression: pending → confirmed → preparing → out_for_delivery → delivered
+- Timestamps for each status change
+- Estimated delivery time
+
+#### **4. Pricing & Payment**
+
+- Subtotal, tax, delivery fee calculations
+- Total amount validation
+- Payment status tracking
+
+#### **5. Design Considerations**
+
+- How to handle price changes over time?
+- What validations are needed?
+- How to structure the items array?
+- What indexes for performance?
+- How to handle order modifications?
+
+### 📍 File Location
+
+- `backend/src/models/Order.js` - **Replace the placeholder schema**
+
+### 💡 Success Criteria
+
+- Schema handles all business requirements
+- Proper validation and constraints
+- Efficient queries and indexes
+- Clear data relationships
+- Handles edge cases gracefully
+
+### 🧪 Testing Your Implementation
+
+Your Order model will be automatically tested across 5 engineering levels:
+
+```bash
+# Run the comprehensive test suite
+cd backend
+npm test order.model.test.js
+```
+
+**Test Levels:**
+- **Level 1 (50-60%):** Basic schema validation
+- **Level 2 (70-80%):** Business logic validation  
+- **Level 3 (85-90%):** Data integrity & constraints
+- **Level 4 (90-95%):** Edge cases & security
+- **Level 5 (95%+):** Performance & scalability
+
+See `backend/tests/README.md` for detailed test descriptions and evaluation criteria.
+
+---
+
+## 🎯 **TASK 3: Webhook Implementation**
+
+### 📋 Requirements
+
+Implement a robust webhook system for order status updates from external delivery services.
+
+### 🔗 Webhook Integration (`backend/src/controllers/webhookController.js`)
+
+### Expected Webhook Payload
+
+```json
+{
+  "orderId": "60d5f484f4b7a5b8c8f8e123",
+  "status": "confirmed" | "preparing" | "out_for_delivery" | "delivered",
+  "estimatedDeliveryTime": "2024-03-15T18:30:00Z",
+  "deliveryNotes": "Left at front door",
+  "timestamp": "2024-03-15T17:45:00Z"
+}
+```
+
+### Implementation Requirements
+
+#### **1. Payload Validation**
+
+- [ ] Validate payload structure
+- [ ] Verify orderId is valid MongoDB ObjectId
+- [ ] Check required fields presence
+
+#### **2. Order Status Management**
+
+- [ ] Find order by ID
+- [ ] Validate status transitions (prevent invalid progressions)
+- [ ] Update order status and related fields
+- [ ] Add timestamps for status changes
+
+#### **3. Error Handling**
+
+- [ ] **400 Bad Request**: Invalid payload structure
+- [ ] **404 Not Found**: Order not found
+- [ ] **409 Conflict**: Invalid status transition
+- [ ] **500 Internal Server Error**: Database errors
+
+#### **4. Status Transition Rules**
+
+```javascript
+const allowedTransitions = {
+  pending: ["confirmed", "cancelled"],
+  confirmed: ["preparing", "cancelled"],
+  preparing: ["out_for_delivery", "cancelled"],
+  out_for_delivery: ["delivered", "cancelled"],
+  delivered: [], // Final state
+  cancelled: [], // Final state
+};
+```
+
+#### **5. Idempotency**
+
+- [ ] Handle duplicate webhook calls
+- [ ] Prevent race conditions
+- [ ] Log webhook events for debugging
+
+### 📍 File Location
+
+- `backend/src/controllers/webhookController.js` - **Complete the implementation**
+
+### 🧪 Testing Considerations
+
+- Test with various payload formats
+- Test invalid order IDs and status transitions
+- Test duplicate webhook calls
+- Test database failures
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
+
+```bash
+# Frontend
+cd frontend
+npm install
+
+# Backend
+cd ../backend
+npm install
+```
+
+### 2. Environment Setup
+
+Create `.env` files in both directories:
+
+**Backend `.env`:**
+
+```
+MONGO_URI=mongodb://localhost:27017/pizza-shop
+PORT=5000
+JWT_SECRET=your-secret-key-here
+```
+
+**Frontend `.env`:**
+
+```
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
+### 3. Start Development Servers
+
+```bash
+# Terminal 1 - Backend
+cd backend
+npm run dev
+
+# Terminal 2 - Frontend
+cd frontend
+npm start
+```
+
+### 4. Test the Application
+
+- Open http://localhost:3000
+- Sign up as admin: Use role "admin" during signup
+- Default admin credentials: `admin@admin.com` / `password123`
+
+---
+
+## 📋 Submission Checklist
+
+### What You Need to Complete:
+
+- [ ] **Task 1**: Complete filter/sort/pagination system
+- [ ] **Task 2**: Design comprehensive Order schema
+- [ ] **Task 3**: Implement webhook functionality
+
+### Quality Standards:
+
+- [ ] All TODO comments addressed
+- [ ] Code follows existing patterns and conventions
+- [ ] Proper error handling and validation
+- [ ] Clean, readable code with good naming
+- [ ] Features work as specified
+
+### Testing Your Implementation:
+
+- [ ] Filter and search functionality works
+- [ ] Infinite scroll loads more pizzas
+- [ ] Order creation and history work
+- [ ] Webhook updates order status
+- [ ] Admin dashboard displays correctly
+
+---
+
+## 🎯 Success Criteria
+
+Your implementation will be evaluated on:
+
+- **Technical Skills**: Code quality, architecture, and best practices
+- **Problem Solving**: How you handle edge cases and error scenarios
+- **Database Design**: Order schema design and data modeling
+- **API Design**: RESTful endpoints and query parameter handling
+- **User Experience**: Frontend functionality and user interaction
 
 Good luck with the challenge! 🍕

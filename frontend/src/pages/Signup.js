@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Loader from "../components/Loader";
+import { useAuth } from "../components/AuthContext";
+import { authAPI } from "../services/api";
 
 function Signup() {
   const [form, setForm] = useState({
@@ -13,11 +15,33 @@ function Signup() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
   const handleSubmit = async (e) => {
-    // TODO: handle signup api call and redirect
+    if (!form.name || !form.email || !form.address || !form.password) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await authAPI.signup(form);
+      login(response.user, response.token);
+      toast.success('Signup successful!');
+      
+      // Redirect based on role
+      if (response.user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/menu');
+      }
+    } catch (err) {
+      toast.error(err.message || 'Signup failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
