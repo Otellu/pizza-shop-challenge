@@ -2,12 +2,44 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import { useCart } from "./CartContext";
 import FilterButton from "./FilterButton";
 
-// Infinite scroll + filtering demo (fetch logic to be implemented)
+// TODO: CANDIDATE TASK - Implement filtering, sorting, and infinite scroll
+// 
+// Current implementation only fetches all pizzas once
+// You need to implement:
+// 1. State management for filters and sorting
+// 2. API calls with query parameters
+// 3. Infinite scroll with pagination
+// 4. Loading states and error handling
+//
+// Expected features:
+// - Filter by: All, Veg, Non-Veg
+// - Sort by: Default, Price (Low to High), Price (High to Low), Name
+// - Search functionality
+// - Infinite scroll loading
+// - Loading spinners
+// - Error handling
+//
+// Implementation hints:
+// - Use useState for filter/sort state
+// - Use useCallback for optimized API calls
+// - Use Intersection Observer API for infinite scroll
+// - Consider debouncing for search input
+// - Update API calls to include query parameters
+//
 function PizzaList() {
   const { cart, addToCart } = useCart();
   const [pizzas, setPizzas] = useState([]);
+  
+  // TODO: Add state for filters, sorting, pagination, loading, etc.
+  // const [filter, setFilter] = useState('all');
+  // const [sortBy, setSortBy] = useState('default');
+  // const [sortOrder, setSortOrder] = useState('asc');
+  // const [searchTerm, setSearchTerm] = useState('');
+  // const [page, setPage] = useState(1);
+  // const [loading, setLoading] = useState(false);
+  // const [hasMore, setHasMore] = useState(true);
 
-  // Fetch pizzas from backend (once on mount)
+  // TODO: Replace this basic fetch with comprehensive filtering/sorting/pagination
   useEffect(() => {
     const fetchPizzas = async () => {
       try {
@@ -22,30 +54,103 @@ function PizzaList() {
     fetchPizzas();
   }, []);
 
+  // TODO: Implement fetchPizzas with query parameters
+  // const fetchPizzas = useCallback(async (reset = false) => {
+  //   if (loading) return;
+  //   setLoading(true);
+  //   try {
+  //     const params = new URLSearchParams({
+  //       filter,
+  //       sortBy,
+  //       sortOrder,
+  //       search: searchTerm,
+  //       page: reset ? 1 : page,
+  //       limit: 10
+  //     });
+  //     const res = await fetch(`${process.env.REACT_APP_API_URL}/pizzas?${params}`);
+  //     const data = await res.json();
+  //     
+  //     if (reset) {
+  //       setPizzas(data.pizzas);
+  //       setPage(2);
+  //     } else {
+  //       setPizzas(prev => [...prev, ...data.pizzas]);
+  //       setPage(prev => prev + 1);
+  //     }
+  //     setHasMore(data.hasNextPage);
+  //   } catch (e) {
+  //     console.error('Error fetching pizzas:', e);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [filter, sortBy, sortOrder, searchTerm, page, loading]);
+
+  // TODO: Implement infinite scroll with Intersection Observer
+  // const lastPizzaElementRef = useCallback(node => {
+  //   if (loading) return;
+  //   if (observer.current) observer.current.disconnect();
+  //   observer.current = new IntersectionObserver(entries => {
+  //     if (entries[0].isIntersecting && hasMore) {
+  //       fetchPizzas();
+  //     }
+  //   });
+  //   if (node) observer.current.observe(node);
+  // }, [loading, hasMore, fetchPizzas]);
+
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Filter and Sort Controls (static, non-interactive) */}
+      {/* TODO: CANDIDATE TASK - Make these controls interactive */}
+      {/* Current controls are static - you need to:
+          1. Add search input field
+          2. Connect filter buttons to state
+          3. Connect sort dropdown to state
+          4. Trigger API calls on filter/sort changes
+          5. Add loading states during API calls
+      */}
       <div className="flex justify-between mb-6 gap-4 flex-wrap items-center">
+        {/* TODO: Add search input */}
+        {/* <div className="flex-1 max-w-md mb-2 sm:mb-0">
+          <input
+            type="text"
+            placeholder="Search pizzas..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-400"
+          />
+        </div> */}
+        
         <div className="flex gap-2 mb-2 sm:mb-0">
-          <FilterButton text="All" active={true} />
-          <FilterButton text="Veg" active={false} />
-          <FilterButton text="Non-Veg" active={false} />
+          {/* TODO: Make filter buttons interactive */}
+          <FilterButton text="All" active={true} /* onClick={() => setFilter('all')} */ />
+          <FilterButton text="Veg" active={false} /* onClick={() => setFilter('veg')} */ />
+          <FilterButton text="Non-Veg" active={false} /* onClick={() => setFilter('non-veg')} */ />
         </div>
+        
         <div className="ml-4">
+          {/* TODO: Make sort dropdown interactive */}
           <select
             className="px-4 py-2 rounded-full border font-semibold text-gray-700 bg-white shadow focus:outline-none cursor-default"
             value="default"
+            /* onChange={(e) => {
+              const [sortBy, sortOrder] = e.target.value.split('-');
+              setSortBy(sortBy);
+              setSortOrder(sortOrder);
+            }} */
           >
             <option value="default">Sort: Default</option>
-            <option value="low">Price: Low to High</option>
-            <option value="high">Price: High to Low</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="name-desc">Name: Z to A</option>
           </select>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {pizzas.map((pizza) => (
+        {pizzas.map((pizza, index) => (
           <div
             key={pizza._id || pizza.id}
+            /* TODO: Add ref for infinite scroll */
+            /* ref={pizzas.length === index + 1 ? lastPizzaElementRef : null} */
             className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:scale-[1.03] transition-transform"
           >
             <div className="relative w-full h-40">
@@ -110,6 +215,27 @@ function PizzaList() {
           </div>
         ))}
       </div>
+      
+      {/* TODO: Add loading state for infinite scroll */}
+      {/* {loading && (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      )} */}
+      
+      {/* TODO: Add "no more results" message */}
+      {/* {!hasMore && pizzas.length > 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No more pizzas to load
+        </div>
+      )} */}
+      
+      {/* TODO: Add empty state */}
+      {/* {!loading && pizzas.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No pizzas found
+        </div>
+      )} */}
     </div>
   );
 }

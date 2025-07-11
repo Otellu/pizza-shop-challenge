@@ -2,21 +2,38 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Loader from '../components/Loader';
+import { useAuth } from '../components/AuthContext';
+import { authAPI } from '../services/api';
 
 function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
   const handleSubmit = async e => {
-    // TODO: call the login api and store the token and role
-    // TODO: redirect to /admin or /menu based on role
-    // TODO: show success or error message
-    try {
+    if (!form.email || !form.password) {
+      toast.error('Please fill in all fields');
+      return;
+    }
 
+    setIsLoading(true);
+    try {
+      const response = await authAPI.login(form);
+      login(response.user, response.token);
+      toast.success('Login successful!');
+      
+      // Redirect based on role
+      if (response.user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/menu');
+      }
     } catch (err) {
-      toast.error('Network error.');
+      toast.error(err.message || 'Login failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 
