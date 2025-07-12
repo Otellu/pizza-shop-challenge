@@ -8,7 +8,7 @@ Welcome to the Pizza Shop Challenge! This is a full-stack application where you'
 
 ### **Feature 2: Order Model Design**
 
-### **Feature 3: Webhook Implementation**
+### **Feature 3: Status update via Webhook Implementation**
 
 ---
 
@@ -22,9 +22,7 @@ Implement a complete filtering, sorting, and infinite scroll pagination system f
 
 - [ ] **Query Parameter Handling**:
 
-  - `filter`: 'all', 'veg', 'non-veg'
-  - `search`: string (search in name and ingredients)
-  - `sortBy`: 'name', 'price', 'popularity'
+  - `filter`: 'veg', 'non-veg'
   - `sortOrder`: 'asc', 'desc'
   - `page`: number (default: 1)
   - `limit`: number (default: 10)
@@ -46,8 +44,10 @@ Implement a complete filtering, sorting, and infinite scroll pagination system f
 - [ ] **Filter Controls**:
 
   - All, Veg, Non-Veg filter buttons
-  - Search input field
-  - Sort dropdown (Price, Name, etc.)
+
+  - [ ] **Sort Controls**:
+
+  - Sort pizza on price default, high to low, low to high
 
 - [ ] **Infinite Scroll**:
 
@@ -57,13 +57,10 @@ Implement a complete filtering, sorting, and infinite scroll pagination system f
 
 - [ ] **State Management**:
   - Filter/sort state management
-  - Debounced search input
-  - Optimized API calls
 
 **Expected API Examples:**
 
 - `GET /api/pizzas?filter=veg&sortBy=price&sortOrder=asc&page=1&limit=10`
-- `GET /api/pizzas?search=margherita&sortBy=name&sortOrder=desc`
 
 ---
 
@@ -141,8 +138,9 @@ npm test order.model.test.js
 ```
 
 **Test Levels:**
+
 - **Level 1 (50-60%):** Basic schema validation
-- **Level 2 (70-80%):** Business logic validation  
+- **Level 2 (70-80%):** Business logic validation
 - **Level 3 (85-90%):** Data integrity & constraints
 - **Level 4 (90-95%):** Edge cases & security
 - **Level 5 (95%+):** Performance & scalability
