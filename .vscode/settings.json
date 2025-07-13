@@ -1,34 +1,20 @@
 {
-    "folders": [
+    "mongodb.connections": [
         {
-            "path": "."
+            "id": "interview-mongodb",
+            "connectionString": "mongodb://testuser:testpass@localhost:27017/testdb?authSource=admin",
+            "name": "Interview MongoDB"
         }
     ],
-    "settings": {
-        "mongodb.connections": [
-            {
-                "id": "interview-mongodb",
-                "connectionString": "mongodb://testuser:testpass@localhost:27017/testdb?authSource=admin",
-                "name": "Interview MongoDB"
-            }
-        ],
-        "workbench.startupEditor": "readme",
-        "markdown.preview.openMarkdownLinks": "inPreview",
-        "workbench.editorAssociations": {
-            "*.md": "vscode.markdown.preview.editor"
-        },
-        "workbench.editor.pinnedTabSizing": "compact",
-        "files.defaultLanguage": "markdown",
-        "markdown.preview.fontSize": 16,
-        "markdown.preview.lineHeight": 1.6,
-        "workbench.colorTheme": "Default Dark+"
+    "workbench.startupEditor": "readme",
+    "workbench.editorAssociations": {
+        "readme.md": "vscode.markdown.preview.editor",
+        "README.md": "vscode.markdown.preview.editor"
     },
-    "extensions": {
-        "recommendations": [
-            "mongodb.mongodb-vscode",
-            "ms-vscode.vscode-typescript-next",
-            "bradlc.vscode-tailwindcss",
-            "esbenp.prettier-vscode"
-        ]
-    }
+    "markdown.preview.openMarkdownLinks": "inPreview",
+    "workbench.editor.enablePreview": true,
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "files.defaultLanguage": "markdown",
+    "markdown.preview.fontSize": 16,
+    "markdown.preview.lineHeight": 1.6
 }
