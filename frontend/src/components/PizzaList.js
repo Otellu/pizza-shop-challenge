@@ -3,7 +3,7 @@ import { useCart } from "./CartContext";
 import FilterButton from "./FilterButton";
 
 // TODO: CANDIDATE TASK - Implement filtering, sorting, and infinite scroll
-// 
+//
 // Current implementation only fetches all pizzas once
 // You need to implement:
 // 1. State management for filters and sorting
@@ -29,7 +29,7 @@ import FilterButton from "./FilterButton";
 function PizzaList() {
   const { cart, addToCart } = useCart();
   const [pizzas, setPizzas] = useState([]);
-  
+
   // TODO: Add state for filters, sorting, pagination, loading, etc.
   // const [filter, setFilter] = useState('all');
   // const [sortBy, setSortBy] = useState('default');
@@ -69,7 +69,7 @@ function PizzaList() {
   //     });
   //     const res = await fetch(`${process.env.REACT_APP_API_URL}/pizzas?${params}`);
   //     const data = await res.json();
-  //     
+  //
   //     if (reset) {
   //       setPizzas(data.pizzas);
   //       setPage(2);
@@ -118,30 +118,32 @@ function PizzaList() {
             className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-400"
           />
         </div> */}
-        
+
         <div className="flex gap-2 mb-2 sm:mb-0">
           {/* TODO: Make filter buttons interactive */}
-          <FilterButton text="All" active={true} /* onClick={() => setFilter('all')} */ />
-          <FilterButton text="Veg" active={false} /* onClick={() => setFilter('veg')} */ />
-          <FilterButton text="Non-Veg" active={false} /* onClick={() => setFilter('non-veg')} */ />
+          <FilterButton
+            text="All"
+            active={true} /* onClick={() => setFilter('all')} */
+          />
+          <FilterButton
+            text="Veg"
+            active={false} /* onClick={() => setFilter('veg')} */
+          />
+          <FilterButton
+            text="Non-Veg"
+            active={false} /* onClick={() => setFilter('non-veg')} */
+          />
         </div>
-        
+
         <div className="ml-4">
           {/* TODO: Make sort dropdown interactive */}
           <select
             className="px-4 py-2 rounded-full border font-semibold text-gray-700 bg-white shadow focus:outline-none cursor-default"
             value="default"
-            /* onChange={(e) => {
-              const [sortBy, sortOrder] = e.target.value.split('-');
-              setSortBy(sortBy);
-              setSortOrder(sortOrder);
-            }} */
           >
             <option value="default">Sort: Default</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
-            <option value="name-asc">Name: A to Z</option>
-            <option value="name-desc">Name: Z to A</option>
           </select>
         </div>
       </div>
@@ -215,21 +217,21 @@ function PizzaList() {
           </div>
         ))}
       </div>
-      
+
       {/* TODO: Add loading state for infinite scroll */}
       {/* {loading && (
         <div className="flex justify-center py-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
         </div>
       )} */}
-      
+
       {/* TODO: Add "no more results" message */}
       {/* {!hasMore && pizzas.length > 0 && (
         <div className="text-center py-8 text-gray-500">
           No more pizzas to load
         </div>
       )} */}
-      
+
       {/* TODO: Add empty state */}
       {/* {!loading && pizzas.length === 0 && (
         <div className="text-center py-8 text-gray-500">

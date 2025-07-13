@@ -2,69 +2,206 @@
 
 Welcome to the Pizza Shop Challenge! This is a full-stack application where you'll be implementing key features to complete the pizza ordering system.
 
-## 🎯 **YOUR TASKS** (What you need to implement)
+### 🎯 **Your tasks** (What you need to implement)
 
-### **Feature 1: Filter, Sort & Pagination System**
+#### **Feature 1: Filter, Sort & Pagination**
 
-### **Feature 2: Order Model Design**
+#### **Feature 2: Order Model Design**
 
-### **Feature 3: Status update via Webhook Implementation**
+#### **Feature 3: Status update via Webhook Implementation**
 
 ---
+# 🚀 Getting started
+<details>
 
-## 🎯 **TASK 1: Filter, Sort & Pagination System**
+<summary><i>Open instructions</i></summary>
 
-### 📋 Requirements
+### 1. Install Dependencies
 
-Implement a complete filtering, sorting, and infinite scroll pagination system for pizzas.
+```bash
+# Frontend
+cd frontend
+npm install
 
-### Backend Implementation (`backend/src/controllers/pizzaController.js`)
+# Backend
+cd ../backend
+npm install
+```
 
-- [ ] **Query Parameter Handling**:
+### 2. Start Development Servers
 
-  - `filter`: 'veg', 'non-veg'
-  - `sortOrder`: 'asc', 'desc'
-  - `page`: number (default: 1)
-  - `limit`: number (default: 10)
+```bash
+# Terminal 1 - Backend
+cd backend
+npm run dev
 
-- [ ] **Response Format**:
-  ```json
-  {
-    "pizzas": [...],
-    "totalCount": 45,
+# Terminal 2 - Frontend
+cd frontend
+npm start
+```
+
+#### **Login Credentials**
+
+**User Account:**
+
+- Email: `user@example.com`
+- Password: `test1234`
+- Role: Regular user (can place orders, view order history)
+
+**Admin Account:**
+
+- Email: `admin@example.com`
+- Password: `test1234`
+- Role: Administrator (can manage pizzas, view all orders, access admin dashboard)
+</details>
+
+---
+# 🎯 **TASK 1: Filter, Sort & Pagination System**
+<details>
+
+<summary><i>Open instructions</i></summary>
+
+**Time Estimate**: 30-40 minutes
+
+## 🎬 What You're Building
+
+You'll implement a pizza browsing system that lets users:
+
+- Filter pizzas by diet type (All/Veg/Non-Veg)
+- Sort by price (Low to High, High to Low)
+- Load more pizzas as they scroll (infinite scroll)
+
+## 📊 Sample Data Context
+
+The database contains ~50 pizzas with these properties:
+
+```javascript
+{
+  "_id": "...",
+  "name": "Margherita",
+  "price": 12.99,
+  "isVegetarian": true,
+  "description": "...",
+  "imageUrl": "..."
+}
+```
+
+## 🔧 Backend Implementation
+
+**File**: `backend/src/controllers/pizzaController.js`
+
+### Query Parameters to Handle:
+
+- `veg`: `true` | `false` (optional - when omitted, shows all pizzas)
+- `sortBy`: `'price'` | `'createdAt'` (default: 'createdAt')
+- `sortOrder`: `'asc'` | `'desc'` (default: 'desc' for newest first)
+- `page`: number (default: 1)
+- `limit`: number (default: 10)
+
+### Required Response Format:
+
+```json
+{
+  "pizzas": [...],
+  "pagination": {
     "currentPage": 1,
     "totalPages": 5,
+    "totalCount": 45,
     "hasNextPage": true,
-    "hasPreviousPage": false
+    "hasPreviousPage": false,
+    "limit": 10
   }
-  ```
+}
+```
 
-### Frontend Implementation (`frontend/src/components/PizzaList.js`)
+### Test Your Backend:
 
-- [ ] **Filter Controls**:
+```bash
+# Test in terminal:
+  npm run feat-1:test
+```
 
-  - All, Veg, Non-Veg filter buttons
+## 🎨 Frontend Implementation
 
-  - [ ] **Sort Controls**:
+**File**: `frontend/src/components/PizzaList.js`
 
-  - Sort pizza on price default, high to low, low to high
+### Filter Controls Required:
 
-- [ ] **Infinite Scroll**:
+- [ ] Three buttons: "All", "Veg", "Non-Veg"
+- [ ] Active state styling for selected filter
+- [ ] Clear visual feedback when filter changes
 
-  - Intersection Observer API implementation
-  - Loading states and error handling
-  - End-of-list detection
+### Sort Controls Required:
 
-- [ ] **State Management**:
-  - Filter/sort state management
+- [ ] Dropdown with options: "Default" (newest first), "Price: Low to High", "Price: High to Low"
+- [ ] Default to "Default" (sorted by createdAt desc)
+- [ ] Visual indicator of current sort option
 
-**Expected API Examples:**
+### Infinite Scroll Required:
 
-- `GET /api/pizzas?filter=veg&sortBy=price&sortOrder=asc&page=1&limit=10`
+- [ ] Use Intersection Observer API
+- [ ] Load next page when user scrolls near bottom
+- [ ] Show loading spinner while fetching
+- [ ] Handle "no more results" state
+- [ ] Handle API errors gracefully
+
+## ✅ Success Criteria
+
+**You'll know it's working when:**
+
+1. Filter buttons change the displayed pizzas correctly
+2. Sort dropdown reorders pizzas by price
+3. Scrolling to bottom loads more pizzas automatically
+4. Loading states show during API calls
+5. "No more pizzas" message appears at the end
+
+## 🧪 Quick Verification
+
+1. Start with "All" filter, "Default" sort (newest pizzas first)
+2. Click "Veg" - only vegetarian pizzas display (still newest first)
+3. Change sort to "Price: Low to High" - cheapest veg pizzas first
+4. Click "Non-Veg" - only non-vegetarian pizzas, cheapest first
+5. Change to "Price: High to Low" - most expensive non-veg pizzas first
+6. Scroll down - more pizzas load automatically
+
+## ⚠️ Common Gotchas
+
+- Remember to reset to page 1 when filters/sort change
+- Handle empty results (no veg pizzas found)
+- Prevent duplicate API calls during scroll
+- Clear previous results when changing filters
+- When no `veg` parameter is sent, show all pizzas (don't filter)
+- Default sort should be newest pizzas first (createdAt desc)
+
+## 🔗 API Examples
+
+```bash
+# Get all pizzas, newest first (default)
+GET /api/pizzas?page=1&limit=10
+
+# Get all pizzas sorted by price (cheapest first)
+GET /api/pizzas?sortBy=price&sortOrder=asc&page=1&limit=10
+
+# Get only vegetarian pizzas, most expensive first
+GET /api/pizzas?veg=true&sortBy=price&sortOrder=desc&page=1&limit=10
+
+# Get only non-vegetarian pizzas, newest first
+GET /api/pizzas?veg=false&page=2&limit=10
+```
+</details>
 
 ---
 
-## 🎯 **TASK 2: Order Model Design**
+# 🎯 **TASK 2: Order Model Design**
+<details>
+
+<summary><i>Open instructions</i></summary>
+
+
+![Order Model Demo](https://via.placeholder.com/600x300/059669/ffffff?text=Order+Model+Design+Demo)
+_Expected result: Complete order flow with status tracking and data integrity_
+
+**Time Estimate**: 30 minutes
 
 ### 📋 Requirements
 
@@ -147,52 +284,60 @@ npm test order.model.test.js
 
 See `backend/tests/README.md` for detailed test descriptions and evaluation criteria.
 
+
+
+</details>
+
 ---
 
-## 🎯 **TASK 3: Webhook Implementation**
+# 🎯 TASK 3: Webhook Implementation
+<details>
 
-### 📋 Requirements
+<summary><i>Open instructions</i></summary>
 
-Implement a robust webhook system for order status updates from external delivery services.
+**Time Estimate**: 20-30 minutes
 
-### 🔗 Webhook Integration (`backend/src/controllers/webhookController.js`)
+## 🎬 What You're Building
 
-### Expected Webhook Payload
+You'll implement a robust webhook system that lets external delivery services update order status in real-time:
+
+- Receive webhook calls from delivery partners
+- Validate order status transitions
+- Update order records with proper error handling
+- Log status changes for debugging
+
+## 📊 Expected Webhook Payload
+
+The delivery service will send payloads like this:
 
 ```json
 {
   "orderId": "60d5f484f4b7a5b8c8f8e123",
-  "status": "confirmed" | "preparing" | "out_for_delivery" | "delivered",
+  "status": "confirmed",
   "estimatedDeliveryTime": "2024-03-15T18:30:00Z",
-  "deliveryNotes": "Left at front door",
+  "deliveryNotes": "Order confirmed by restaurant",
   "timestamp": "2024-03-15T17:45:00Z"
 }
 ```
 
-### Implementation Requirements
+## 🔧 Backend Implementation
+
+**File**: `backend/src/controllers/webhookController.js`
+
+### Implementation Requirements:
 
 #### **1. Payload Validation**
-
-- [ ] Validate payload structure
+- [ ] Validate required fields: `orderId`, `status`, `timestamp`
 - [ ] Verify orderId is valid MongoDB ObjectId
-- [ ] Check required fields presence
+- [ ] Return 400 for missing/invalid fields
 
 #### **2. Order Status Management**
+- [ ] Find order by ID (return 404 if not found)
+- [ ] Validate status transitions using allowed rules
+- [ ] Update order status and optional fields
+- [ ] Save statusUpdatedAt timestamp
 
-- [ ] Find order by ID
-- [ ] Validate status transitions (prevent invalid progressions)
-- [ ] Update order status and related fields
-- [ ] Add timestamps for status changes
-
-#### **3. Error Handling**
-
-- [ ] **400 Bad Request**: Invalid payload structure
-- [ ] **404 Not Found**: Order not found
-- [ ] **409 Conflict**: Invalid status transition
-- [ ] **500 Internal Server Error**: Database errors
-
-#### **4. Status Transition Rules**
-
+#### **3. Status Transition Rules**
 ```javascript
 const allowedTransitions = {
   pending: ["confirmed", "cancelled"],
@@ -200,78 +345,98 @@ const allowedTransitions = {
   preparing: ["out_for_delivery", "cancelled"],
   out_for_delivery: ["delivered", "cancelled"],
   delivered: [], // Final state
-  cancelled: [], // Final state
+  cancelled: [] // Final state
 };
 ```
 
-#### **5. Idempotency**
+#### **4. Error Handling**
+- [ ] **400 Bad Request**: Missing required fields
+- [ ] **404 Not Found**: Order not found
+- [ ] **409 Conflict**: Invalid status transition
+- [ ] **500 Internal Server Error**: Database errors
 
-- [ ] Handle duplicate webhook calls
-- [ ] Prevent race conditions
-- [ ] Log webhook events for debugging
+#### **5. Response Format**
+```json
+{
+  "message": "Order status updated successfully",
+  "orderId": "60d5f484f4b7a5b8c8f8e123",
+  "newStatus": "confirmed"
+}
+```
 
-### 📍 File Location
-
-- `backend/src/controllers/webhookController.js` - **Complete the implementation**
-
-### 🧪 Testing Considerations
-
-- Test with various payload formats
-- Test invalid order IDs and status transitions
-- Test duplicate webhook calls
-- Test database failures
-
----
-
-## 🚀 Getting Started
-
-### 1. Install Dependencies
+### Test Your Backend:
 
 ```bash
-# Frontend
-cd frontend
-npm install
-
-# Backend
-cd ../backend
-npm install
+# Test webhook endpoint
+npm run feat-1:test
 ```
 
-### 2. Environment Setup
+## ✅ Success Criteria
 
-Create `.env` files in both directories:
+**You'll know it's working when:**
 
-**Backend `.env`:**
+1. Valid status updates succeed (pending → confirmed)
+2. Invalid transitions are rejected (delivered → pending) 
+3. Missing order IDs return 404
+4. Missing required fields return 400
+5. Database errors are handled gracefully
 
-```
-MONGO_URI=mongodb://localhost:27017/pizza-shop
-PORT=5000
-JWT_SECRET=your-secret-key-here
-```
+## 🧪 Quick Verification
 
-**Frontend `.env`:**
+1. Start server: `npm run dev`
+2. Create an order (use frontend or admin panel)
+3. Test valid transition: `pending → confirmed`
+4. Test invalid transition: `confirmed → pending` (should fail)
+5. Test missing order: use fake order ID (should return 404)
+6. Check logs for webhook activity
 
-```
-REACT_APP_API_URL=http://localhost:5000/api
-```
+## ⚠️ Common Gotchas
 
-### 3. Start Development Servers
+- Import Order model: `const Order = require('../models/Order')`
+- Check transitions before updating status
+- Use try/catch for database operations
+- Return appropriate HTTP status codes
+- Validate required fields before processing
+- Don't allow backwards status transitions
+
+## 🔗 API Examples
 
 ```bash
-# Terminal 1 - Backend
-cd backend
-npm run dev
+# Valid status update (pending → confirmed)
+curl -X POST http://localhost:5000/api/webhook/delivery-update \
+  -H "Content-Type: application/json" \
+  -d '{
+    "orderId": "60d5f484f4b7a5b8c8f8e123",
+    "status": "confirmed",
+    "timestamp": "2024-03-15T17:45:00Z"
+  }'
 
-# Terminal 2 - Frontend
-cd frontend
-npm start
+# Invalid transition test (should return 409)
+curl -X POST http://localhost:5000/api/webhook/delivery-update \
+  -H "Content-Type: application/json" \
+  -d '{
+    "orderId": "60d5f484f4b7a5b8c8f8e123",
+    "status": "pending",
+    "timestamp": "2024-03-15T17:45:00Z"
+  }'
+
+# Missing fields test (should return 400)
+curl -X POST http://localhost:5000/api/webhook/delivery-update \
+  -H "Content-Type: application/json" \
+  -d '{
+    "orderId": "60d5f484f4b7a5b8c8f8e123"
+  }'
+
+# Non-existent order test (should return 404)
+curl -X POST http://localhost:5000/api/webhook/delivery-update \
+  -H "Content-Type: application/json" \
+  -d '{
+    "orderId": "000000000000000000000000",
+    "status": "confirmed", 
+    "timestamp": "2024-03-15T17:45:00Z"
+  }'
 ```
-
-### 4. Test the Application
-
-- Open http://localhost:3000
-- Sign up as admin: Use role "admin" during signup
-- Default admin credentials: `admin@admin.com` / `password123`
+</details>
 
 ---
 
@@ -301,14 +466,50 @@ npm start
 
 ---
 
-## 🎯 Success Criteria
+# 🏆 Success Criteria
 
-Your implementation will be evaluated on:
+### Evaluation Criteria
 
-- **Technical Skills**: Code quality, architecture, and best practices
-- **Problem Solving**: How you handle edge cases and error scenarios
-- **Database Design**: Order schema design and data modeling
-- **API Design**: RESTful endpoints and query parameter handling
-- **User Experience**: Frontend functionality and user interaction
+Your challenge submission will be evaluated on:
 
-Good luck with the challenge! 🍕
+- Clean, readable code with consistent formatting
+- Proper naming conventions and code organization
+- Following existing project patterns and conventions
+- Appropriate use of modern JavaScript/React features
+- Error handling and validation implementation
+
+- **Feature 1**: Filter/Sort/Pagination functionality
+- **Feature 2**: Order Model schema design and testing
+- **Feature 3**: Webhook implementation and status updates
+- All tests passing (especially Order model tests)
+- Requirements met as specified in each task
+
+----
+
+# 🧪 Testing Commands
+
+#### **Run All Tests**
+
+```bash
+# Backend tests
+cd backend
+npm test
+
+# Frontend tests
+cd frontend
+npm test
+```
+
+#### **Test Specific Features**
+
+```bash
+# Test Order Model implementation
+cd backend
+npm test order.model.test.js
+
+# Test with coverage
+npm test:coverage
+
+# Watch mode for development
+npm test:watch
+```
