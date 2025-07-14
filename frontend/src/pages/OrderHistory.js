@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { orderAPI } from '../services/api';
 
 function OrderHistory() {
   const [orders, setOrders] = useState([]);
@@ -12,11 +13,7 @@ function OrderHistory() {
     async function fetchOrders() {
       setLoading(true);
       try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/orders/mine`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
+        const data = await orderAPI.getUserOrders();
         setOrders(data);
       } catch (err) {
         setOrders([]);
@@ -30,12 +27,9 @@ function OrderHistory() {
     setDetailLoading(true);
     setSelectedOrder(null);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setSelectedOrder(data);
+      const data = await orderAPI.getUserOrders(); // For now, just find the order from the list
+      const order = data.find(o => o._id === orderId);
+      setSelectedOrder(order);
     } catch (err) {
       setSelectedOrder(null);
     }
@@ -51,25 +45,56 @@ function OrderHistory() {
         <div className="text-center py-8 text-gray-400">No orders found.</div>
       ) : (
         <div className="space-y-4">
-          {orders.map(order => (
-            <div key={order._id} className="border rounded-lg p-4 shadow-sm hover:bg-gray-50 transition cursor-pointer" onClick={() => openOrderDetail(order._id)}>
-              <div className="flex flex-wrap items-center justify-between mb-2">
-                <div className="flex gap-2 flex-wrap">
-                  {order.pizzas.map(pizza => (
-                    <span key={pizza._id} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-full text-sm">
-                      {pizza.veg ? (
-                        <span title="Veg" className="inline-block w-3 h-3 bg-green-600 rounded-full border border-green-800" />
-                      ) : (
-                        <span title="Non-Veg" className="inline-block w-3 h-3 bg-red-600 rounded-full border border-red-800" />
-                      )}
-                      {pizza.name}
+          {orders.map((order) => (
+            <div key={order._id} className="bg-white p-6 rounded-lg shadow-md border">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Order #{order._id.slice(-6)}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString()}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                    order.status === 'preparing' ? 'bg-yellow-100 text-yellow-800' :
+                    order.status === 'out_for_delivery' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {order.status.charAt(0).toUpperCase() + order.status.slice(1).replace('_', ' ')}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-2">Items: {order.items.length} pizza(s)</p>
+                <div className="flex flex-wrap gap-2">
+                  {order.items.slice(0, 3).map((item, index) => (
+                    <span key={index} className="text-sm bg-gray-100 px-2 py-1 rounded">
+                      {item.name}
                     </span>
                   ))}
+                  {order.items.length > 3 && (
+                    <span className="text-sm text-gray-500">
+                      +{order.items.length - 3} more
+                    </span>
+                  )}
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : order.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.status}</span>
               </div>
-              <div className="text-gray-600 text-sm mb-1">Address: {order.address}</div>
-              <div className="text-gray-400 text-xs">Ordered at: {new Date(order.createdAt).toLocaleString()}</div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-bold text-red-600">
+                  ₹{order.totalAmount}
+                </span>
+                <button
+                  onClick={() => openOrderDetail(order._id)}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                >
+                  View Details
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -85,30 +110,47 @@ function OrderHistory() {
               <div className="text-center py-6">Loading...</div>
             ) : (
               <>
-                <div className="mb-2">
-                  <span className="font-semibold">Status: </span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${selectedOrder.status === 'delivered' ? 'bg-green-100 text-green-700' : selectedOrder.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{selectedOrder.status}</span>
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-2">
+                    Order #{selectedOrder._id.slice(-6)}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Placed on {new Date(selectedOrder.createdAt).toLocaleDateString()} at {new Date(selectedOrder.createdAt).toLocaleTimeString()}
+                  </p>
                 </div>
-                <div className="mb-2">
-                  <span className="font-semibold">Address:</span> {selectedOrder.address}
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold">Ordered at:</span> {new Date(selectedOrder.createdAt).toLocaleString()}
-                </div>
-                <div className="mb-2">
-                  <span className="font-semibold">Pizzas:</span>
-                  <ul className="list-disc ml-6 mt-1">
-                    {selectedOrder.pizzas.map(pizza => (
-                      <li key={pizza._id} className="flex items-center gap-2">
-                        {pizza.veg ? (
-                          <span title="Veg" className="inline-block w-3 h-3 bg-green-600 rounded-full border border-green-800" />
-                        ) : (
-                          <span title="Non-Veg" className="inline-block w-3 h-3 bg-red-600 rounded-full border border-red-800" />
-                        )}
-                        <span>{pizza.name}</span>
-                      </li>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">Items:</h4>
+                  <div className="space-y-2">
+                    {selectedOrder.items.map((item, index) => (
+                      <div key={index} className="flex justify-between py-2 border-b">
+                        <span>{item.name}</span>
+                        <span>₹{item.price}</span>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">Delivery Address:</h4>
+                  <p className="text-gray-600">{selectedOrder.deliveryAddress}</p>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">Status:</h4>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    selectedOrder.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                    selectedOrder.status === 'preparing' ? 'bg-yellow-100 text-yellow-800' :
+                    selectedOrder.status === 'out_for_delivery' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1).replace('_', ' ')}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-center font-bold text-lg pt-4 border-t">
+                  <span>Total Amount:</span>
+                  <span className="text-red-600">₹{selectedOrder.totalAmount}</span>
                 </div>
               </>
             )}

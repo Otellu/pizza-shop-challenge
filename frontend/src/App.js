@@ -1,23 +1,30 @@
-import React from 'react';
-import { CartProvider } from './components/CartContext';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import ErrorBoundary from './components/ErrorBoundary';
-import { Toaster } from 'react-hot-toast';
-import Navbar from './components/Navbar';
-import LandingPage from './components/LandingPage';
-import AdminDashboard from './pages/AdminDashboard';
-import UserLanding from './pages/UserLanding';
-import NotAuthorized from './pages/NotAuthorized';
-import RequireAuth from './components/RequireAuth';
-import Footer from './components/Footer';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Checkout from './pages/Checkout';
-import OrderHistory from './pages/OrderHistory';
+import React from "react";
+import { CartProvider } from "./components/CartContext";
+import { AuthProvider } from "./components/AuthContext";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
+import LandingPage from "./components/LandingPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserLanding from "./pages/UserLanding";
+import NotAuthorized from "./pages/NotAuthorized";
+import RequireAuth from "./components/RequireAuth";
+import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Checkout from "./pages/Checkout";
+import OrderHistory from "./pages/OrderHistory";
 
 function Layout({ children }) {
   const location = useLocation();
-  const showNavFooter = location.pathname !== '/login' && location.pathname !== '/signup';
+  const showNavFooter =
+    location.pathname !== "/login" && location.pathname !== "/signup";
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {showNavFooter && <Navbar />}
@@ -30,33 +37,45 @@ function Layout({ children }) {
 }
 
 function AppContent() {
-  console.log(localStorage.getItem('role'))
   return (
     <Layout>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/menu" element={
-          <RequireAuth>
-            <UserLanding />
-          </RequireAuth>
-        } />
-        <Route path="/admin" element={
-          <RequireAuth>
-            {localStorage.getItem('role') === 'admin' ? <AdminDashboard /> : <NotAuthorized />}
-          </RequireAuth>
-        } />
+        <Route
+          path="/menu"
+          element={
+            <RequireAuth>
+              <UserLanding />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <RequireAuth adminOnly={true}>
+              <AdminDashboard />
+            </RequireAuth>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/checkout" element={
-          <RequireAuth>
-            <Checkout />
-          </RequireAuth>
-        } />
-        <Route path="/orders" element={
-          <RequireAuth>
-            <OrderHistory />
-          </RequireAuth>
-        } />
+        <Route path="/not-authorized" element={<NotAuthorized />} />
+        <Route
+          path="/checkout"
+          element={
+            <RequireAuth>
+              <Checkout />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <RequireAuth>
+              <OrderHistory />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </Layout>
   );
@@ -65,12 +84,14 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <CartProvider>
-        <Router>
-          <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
-          <AppContent />
-        </Router>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+            <AppContent />
+          </Router>
+        </CartProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
