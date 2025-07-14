@@ -1,0 +1,8 @@
+{
+    "connections": [
+      {
+        "name": "Mongo Interview DB",
+        "connectionString": "mongodb://candidate:candidatepass@mongo-db:27017/testdb?authSource=testdb"
+      }
+    ]
+}
