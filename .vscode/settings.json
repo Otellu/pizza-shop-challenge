@@ -1,12 +1,4 @@
 {
-    "mongodb.connections": [
-        {
-            "id": "interview-mongodb",
-            "connectionString": "mongodb://testuser:testpass@localhost:27017/testdb?authSource=admin",
-            "name": "Interview MongoDB"
-        }
-    ],
-    "workbench.startupEditor": "readme",
     "workbench.editorAssociations": {
         "readme.md": "vscode.markdown.preview.editor",
         "README.md": "vscode.markdown.preview.editor"
