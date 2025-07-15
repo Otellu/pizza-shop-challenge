@@ -16,7 +16,15 @@ Welcome to the Pizza Shop Challenge! This is a full-stack application where you'
 
 <summary><i>Open instructions</i></summary>
 
-### 1. Install Dependencies
+### 1. Connect Mongo DB
+
+![MongoDB Connection](https://juyrycyjglwfsllqrgpi.supabase.co/storage/v1/object/public/coding-challenges-files//mong-connection.jpg)
+ 
+ 1. Click on the mongo db extension
+ 2. Once the extension is opened, click the connect button.
+ 3. Enter the connection string `mongodb://candidate:candidatepass@mongo-db:27017/testdb?authSource=testdb` in the connection bar at the top.
+
+### 2. Install Dependencies
 
 ```bash
 # Frontend
@@ -28,7 +36,7 @@ cd ../backend
 npm install
 ```
 
-### 2. Start Development Servers
+### 3. Start Development Servers
 
 ```bash
 # Terminal 1 - Backend
