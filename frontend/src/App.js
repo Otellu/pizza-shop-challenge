@@ -86,7 +86,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <CartProvider>
-          <Router>
+          <Router basename={process.env.BASE_PATH}>
             <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
             <AppContent />
           </Router>
