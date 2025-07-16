@@ -86,7 +86,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <CartProvider>
-          <Router basename={process.env.BASE_PATH}>
+          <Router basename={process.env.REACT_APP_BASE_PATH}>
             <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
             <AppContent />
           </Router>
