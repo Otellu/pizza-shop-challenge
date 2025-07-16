@@ -22,7 +22,7 @@ Welcome to the Pizza Shop Challenge! This is a full-stack application where you'
  
  1. Click on the mongo db extension
  2. Once the extension is opened, click the connect button.
- 3. Enter the connection string `mongodb://candidate:candidatepass@mongo-db:27017/testdb?authSource=testdb` in the connection bar at the top.
+ 3. Enter the connection string `mongodb://pizzauser:pizzapass@mongo-db:27017/testdb?authSource=testdb` in the connection bar at the top.
 
 ### 2. Install Dependencies
 
