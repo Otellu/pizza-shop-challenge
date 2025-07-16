@@ -8,6 +8,7 @@
     "postinstall": "node src/migrations/seed-db.js",
     "test": "jest",
     "feat-1:test": "jest tests/pizza.controller.test.js",
+    "feat-2:test": "jest tests/order.model.test.js",
     "feat-3:test": "jest tests/webhook.controller.test.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
