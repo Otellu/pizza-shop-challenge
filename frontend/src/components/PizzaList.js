@@ -18,26 +18,12 @@ import FilterButton from "./FilterButton";
 // - Infinite scroll loading
 // - Loading spinners
 // - Error handling
-//
-// Implementation hints:
-// - Use useState for filter/sort state
-// - Use useCallback for optimized API calls
-// - Use Intersection Observer API for infinite scroll
-// - Consider debouncing for search input
-// - Update API calls to include query parameters
-//
+
 function PizzaList() {
   const { cart, addToCart } = useCart();
   const [pizzas, setPizzas] = useState([]);
 
   // TODO: Add state for filters, sorting, pagination, loading, etc.
-  // const [filter, setFilter] = useState('all');
-  // const [sortBy, setSortBy] = useState('default');
-  // const [sortOrder, setSortOrder] = useState('asc');
-  // const [searchTerm, setSearchTerm] = useState('');
-  // const [page, setPage] = useState(1);
-  // const [loading, setLoading] = useState(false);
-  // const [hasMore, setHasMore] = useState(true);
 
   // TODO: Replace this basic fetch with comprehensive filtering/sorting/pagination
   useEffect(() => {
@@ -55,84 +41,22 @@ function PizzaList() {
   }, []);
 
   // TODO: Implement fetchPizzas with query parameters
-  // const fetchPizzas = useCallback(async (reset = false) => {
-  //   if (loading) return;
-  //   setLoading(true);
-  //   try {
-  //     const params = new URLSearchParams({
-  //       filter,
-  //       sortBy,
-  //       sortOrder,
-  //       search: searchTerm,
-  //       page: reset ? 1 : page,
-  //       limit: 10
-  //     });
-  //     const res = await fetch(`${process.env.REACT_APP_API_URL}/pizzas?${params}`);
-  //     const data = await res.json();
-  //
-  //     if (reset) {
-  //       setPizzas(data.pizzas);
-  //       setPage(2);
-  //     } else {
-  //       setPizzas(prev => [...prev, ...data.pizzas]);
-  //       setPage(prev => prev + 1);
-  //     }
-  //     setHasMore(data.hasNextPage);
-  //   } catch (e) {
-  //     console.error('Error fetching pizzas:', e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [filter, sortBy, sortOrder, searchTerm, page, loading]);
-
-  // TODO: Implement infinite scroll with Intersection Observer
-  // const lastPizzaElementRef = useCallback(node => {
-  //   if (loading) return;
-  //   if (observer.current) observer.current.disconnect();
-  //   observer.current = new IntersectionObserver(entries => {
-  //     if (entries[0].isIntersecting && hasMore) {
-  //       fetchPizzas();
-  //     }
-  //   });
-  //   if (node) observer.current.observe(node);
-  // }, [loading, hasMore, fetchPizzas]);
 
   return (
     <div className="max-w-2xl mx-auto">
       {/* TODO: CANDIDATE TASK - Make these controls interactive */}
       {/* Current controls are static - you need to:
-          1. Add search input field
-          2. Connect filter buttons to state
-          3. Connect sort dropdown to state
-          4. Trigger API calls on filter/sort changes
-          5. Add loading states during API calls
+          1. Connect filter buttons to state
+          2. Connect sort dropdown to state
+          3. Trigger API calls on filter/sort changes
+          4. Add loading states during API calls
       */}
       <div className="flex justify-between mb-6 gap-4 flex-wrap items-center">
-        {/* TODO: Add search input */}
-        {/* <div className="flex-1 max-w-md mb-2 sm:mb-0">
-          <input
-            type="text"
-            placeholder="Search pizzas..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-400"
-          />
-        </div> */}
-
         <div className="flex gap-2 mb-2 sm:mb-0">
           {/* TODO: Make filter buttons interactive */}
-          <FilterButton
-            text="All"
-            active={true} /* onClick={() => setFilter('all')} */
-          />
-          <FilterButton
-            text="Veg"
-            active={false} /* onClick={() => setFilter('veg')} */
-          />
-          <FilterButton
-            text="Non-Veg"
-            active={false} /* onClick={() => setFilter('non-veg')} */
-          />
+          <FilterButton text="All" active={true} />
+          <FilterButton text="Veg" active={false} />
+          <FilterButton text="Non-Veg" active={false} />
         </div>
 
         <div className="ml-4">
@@ -151,8 +75,6 @@ function PizzaList() {
         {pizzas.map((pizza, index) => (
           <div
             key={pizza._id || pizza.id}
-            /* TODO: Add ref for infinite scroll */
-            /* ref={pizzas.length === index + 1 ? lastPizzaElementRef : null} */
             className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:scale-[1.03] transition-transform"
           >
             <div className="relative w-full h-40">
